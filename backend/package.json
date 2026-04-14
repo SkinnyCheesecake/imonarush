@@ -1,0 +1,31 @@
+{
+  "name": "back-end",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "myself",
+  "license": "ISC",
+  "description": "whatever app",
+  "dependencies": {
+    "axios": "^1.15.0",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "mongoose": "^9.4.1",
+    "morgan": "^1.10.1",
+    "nodemon": "^3.1.14",
+    "winston": "^3.19.0"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SkinnyCheesecake/imonarush.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SkinnyCheesecake/imonarush/issues"
+  },
+  "homepage": "https://github.com/SkinnyCheesecake/imonarush#readme"
+}
