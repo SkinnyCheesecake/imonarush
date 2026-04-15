@@ -434,7 +434,7 @@ app.get('/api/students/:id', async (req, res) => {
 
 function formatingUptime(seconds) {
     const days = Math.floor(seconds / (3600 * 24));
-    const housr = Math.floor((seconds % (3600 * 24)) / 3600);
+    const hours = Math.floor((seconds % (3600 * 24)) / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const remainingSeconds = Math.floor(seconds % 60);
 
