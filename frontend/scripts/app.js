@@ -83,5 +83,29 @@ function navigateToSection( section ) {
     });
 
     document.getElementById(`${section}Section`).classList.add("active");
+
+    if(section === "courses") {
+        loadCourses();
+    } else if (section === "students" || section === "dashboard") {
+        loadStudents();
+        updateDashboardStats();
+    }
+}
+
+async function updateDashboardStats() {
+    try{
+        const response = await fetch(`${API_BASE_URL}/api/dashboard/stats`);
+        if(!response.ok) throw new Error("Failed to fetch dashboard stats");
+
+        const stats = await response.json();
+
+        document.querySelector(".card:nth-child(1) .card-value").textContent = stats.totalStudents.toLocateString();
+        document.querySelector(".card:nth-child(2) .card-value").textContent = stats.activeCourses.toLocateString();
+        document.querySelector(".card:nth-child(3) .card-value").textContent = stats.graduate.toLocateString();
+        document.querySelector( ".card:nth-child(4) .card-value").textContent = `${stats.successRate}%`;
+    } catch (errpr) {
+        console.error("Error updating dashboard stats:", error);
+        showNotification("Error updating statistics", "error");
+    }
 }
 
