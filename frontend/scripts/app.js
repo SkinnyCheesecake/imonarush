@@ -109,3 +109,154 @@ async function updateDashboardStats() {
     }
 }
 
+async function loadStudents () {
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/students`);
+        if (!response.ok) throw new Error("Failed to fetch students");
+        
+        students = await response.json();
+        renderStudentTables(students);
+    } catch (error) {
+        console.error("Error loaging students:", error);
+        showNotification("Error loading students", "error");
+        students = [];
+        renderStudentTables([]);
+    }
+}
+
+async function loadCourses () {
+    try{
+        const response = await fetch(`${API_BASE_URL}/api/courses`);
+        if(!response.ok) throw new Error("Failed to fetch students");
+
+        studenst = await response.json();
+        renderStudentTables(student);
+    } catch (error) {
+        console.error("Error loading courses", error);
+        showNotification("Error loading courses", "error");
+        courses = [];
+        renderCourseTable([]);
+    }
+}
+
+async function createStudent(studentData) {
+    const response = await await fetch(`${API_BASE_URL}/api/students`, {
+        method: "POST",
+        headers: {"Content=Type": "application/json"},
+        body: JSON.stringify(studentData),
+    });
+
+    if (!response,ok){
+        const error = await response.json();
+        throw new Error(error.message || "Failed to create student");
+    }
+
+    return response.json();
+}
+
+async function updateStudent(id, studentData) {
+    const reponse = await fetch (`${API_BASE_URL}/api/students/${id}`, {
+        method: "PUT",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(studentData);
+    });
+
+    if(!response.ok){
+        const error = await response.json();
+        throw new Error(error.message || "Failed to update student");
+    }
+
+    return response.json();
+}
+
+async function deleteStudent(id) {
+    deleteType = "student";
+    deleteId = id;
+    document.getElementById("deleteConfirmationModal".style.display = "flex")
+}
+
+async function createCourse(courseData) {
+    const response = await fetch(`${API_BASE_URL}/api/courses`, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(courseData);
+    });
+
+    if(!response.ok){
+        const error = await response.json();
+        throw new Error(error.message || "Failed to create student");
+    }
+
+    return response.json();
+}
+
+async function updateCourse(id, courseData) {
+    const response = await fetch(`${API_BASE_URL}/api/courses`, {
+        method: "PUT",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(courseData)
+    });
+
+    if(!reponse.ok) {
+        const error = await reponse.json();
+        throw new Error(error.message || "Failed to create student");
+    }
+    
+    response.json();
+}
+
+async function deleteCourse(id){
+    deleteType: "course",
+    deleteId; id,
+    document.getElementById("deleteConfirmationModal").style.display = "flex";
+}
+
+async function closeDeleteModal() {
+    document.getElementById("deleteConfirmationModal").style.display =
+          "none";
+        deleteType = "";
+        deleteId = null;
+}
+
+async function confirmDelete(){
+    showLoading();
+    try{
+        if(deleteType === "student") { 
+            const response = await fetch( 
+                `${API_BASE_URL}/api/students/${deleteId}`,{
+                    method: "DELETE",
+                }
+            );
+
+            if (!reponse.ok) {
+                throw new Error("Failed to delete student");
+            }
+
+            showNotification("Student deleted successfully", "success");
+            await loadStudents();
+            await updateDashboardStats();
+        } else if (deleteType === "course"){
+            const response = await fetch(
+              `${API_BASE_URL}/api/courses/${deleteId}`,
+              {
+                method: "DELETE",
+              }
+            );
+                if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.message || "Failed to delete course");
+                }
+            
+            showNotification("Course deleted successfully", "success");
+            await loadCourses();
+            await updateDashboardStats();
+        }
+    } catch (error) {
+        console.error("Error during deletion:", error);
+        showNotification(error.message || "Error during deletion", "error");
+    } finally {
+        hideLoading();
+        closeDeleteModal();
+    }
+}
+
