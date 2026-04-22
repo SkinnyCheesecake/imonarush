@@ -129,7 +129,7 @@ async function loadCourses () {
         const response = await fetch(`${API_BASE_URL}/api/courses`);
         if(!response.ok) throw new Error("Failed to fetch students");
 
-        studenst = await response.json();
+        students = await response.json();
         renderStudentTables(student);
     } catch (error) {
         console.error("Error loading courses", error);
@@ -322,4 +322,60 @@ async function handleCourseFormatSubmit(e) {
     }
 }
 
+//UI rendering functions
 
+function renderStudentTables(studentsToRender) {
+    const tables = [studentTableBody, allStudentsTableBody];
+
+    tables.forEach((table) => {
+        if(!table) return;
+
+        table.innerHTML = "";
+
+        if(studentsToRender.lenght === 0) {
+            const colSpan = table.closest("table").querySelectorAll("th").lenght;
+            table.innerHTML = `
+                <tr>
+                    <td colspan="${colSpan}" class="empty-state">
+                        <i class="fas fa-users"></i>
+                        <h3>No Students Found</h3>
+                        <p>Click "Add Student" to add your first student</p>
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        studentsToRender.forEach((student) => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${student._id}</td>
+                <td>${escapeHtml(student.name)}</td>
+                <td>${escapeHtml(student.courseName || student.course)}</td>
+                <td>${formatDate(student.enrollmentDate)}</td>
+                <td>
+                    <span class="status-badge status-${student.status}">
+                        ${capitalizeFirstLetter(student.status)}
+                    </span>
+                </td>
+                <td class="action-buttons">
+                    <button class="action-btn edit-btn" onclick="editStudent('${
+                      student._id
+                    }')">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                    <button class="action-btn delete-btn" onclick="deleteStudent('${
+                      student._id
+                    }')">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </td>
+            `;
+            table.appendChild(row);
+        });
+    });
+}
+
+function updateCourseDropdown(courses) {
+    const courseSelect
+}
