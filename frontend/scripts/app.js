@@ -260,3 +260,66 @@ async function confirmDelete(){
     }
 }
 
+async function handleFormSubmit(e) {
+    e.preventDefault();
+    showLoading();
+
+    const studentData = {
+        name: document.getElementById("studentName").value.trim(),
+        email: document.getElementById("studentEmail").value.trim(),
+        course: document.getElementById("studentCourse").value.trim(),
+        enrollmentDate: document.getElementById("enrollmentDate").value,
+        status: "active",
+    };
+
+    try{
+        if (editingId) {
+            await updateStudent(editingId, studentData);
+            showNotification("Student updated successfully", "success");
+        } else {
+            await createStudent(studentData);
+            showNotification("Student created successfully", "success");
+        }
+
+        closeModal();
+        await loadStudents();
+        await updateDashboardStats();
+    } catch (error) {
+        console.error("Error:", error);
+        showNotification("Error saving student data", "error");
+    } finallt {
+        hideLoading();
+    }
+}
+
+async function handleCourseFormatSubmit(e) {
+    e.preventDefault();
+    showLoading();
+
+    const courseData = {
+        name: document.getElementById("courseName").value.trim(),
+        description: document.getElementById("courseDescription").value.trim(),
+        duration: parseInt(document.getElementById("courseDuration").value),
+        status: document.getElementById("courseStatus").value,
+    };
+
+    try {
+        if(editingCourseId) {
+            await updateCourse(editingCourseId, courseData);
+            showNotification("Course updated successfully", "success");
+        } else {
+            await createCourse(courseData);
+            showNotification("Course created successfully", "success");
+        }
+        closeCourseModal();
+        await loadCourses();
+        await updateDashboardStats();
+    } catch (error) {
+        console.error("Error", error);
+        showNotification("Error saving data", "error");
+    } finally {
+        hideLoading();
+    }
+}
+
+
